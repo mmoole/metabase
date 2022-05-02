@@ -150,6 +150,9 @@ export const getPKRowIndexMap = createSelector(
       return {};
     }
     const { rows } = result.data;
+    if (PKColumnIndex < 0) {
+      return rows.map((_, index) => index);
+    }
     const map = {};
     rows.forEach((row, index) => {
       const PKValue = row[PKColumnIndex];
@@ -425,6 +428,9 @@ export const getPreviousRowPKValue = createSelector(
     if (!result) {
       return;
     }
+    if (PKColumnIndex === -1) {
+      return rowIndex - 1;
+    }
     const { rows } = result.data;
     return rows[rowIndex - 1][PKColumnIndex];
   },
@@ -435,6 +441,9 @@ export const getNextRowPKValue = createSelector(
   (result, PKColumnIndex, rowIndex) => {
     if (!result) {
       return;
+    }
+    if (PKColumnIndex === -1) {
+      return rowIndex + 1;
     }
     const { rows } = result.data;
     return rows[rowIndex + 1][PKColumnIndex];
