@@ -1639,7 +1639,7 @@ class StructuredQueryInner extends AtomicQuery {
   }
 } // subclass of StructuredQuery that's returned by query.sourceQuery() to allow manipulation of source-query
 
-const StructuredQuery = memoizeClass(
+class StructuredQuery extends memoizeClass(
   "table",
   "filters",
   "sorts",
@@ -1655,7 +1655,7 @@ const StructuredQuery = memoizeClass(
   "rootQuery",
   "lastSummarizedQuery",
   "topLevelQuery",
-)(StructuredQueryInner);
+)(StructuredQueryInner) {}
 
 export default StructuredQuery;
 
