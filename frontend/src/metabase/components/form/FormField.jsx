@@ -53,9 +53,7 @@ function FormField(props) {
     formField,
     title = formField && formField.title,
     description = formField && formField.description,
-    descriptionPosition = descriptionPosition ||
-      (formField && formField.descriptionPosition) ||
-      "top",
+    descriptionPosition = (formField && formField.descriptionPosition) || "top",
     info = formField && formField.info,
     infoLabel = formField && formField.infoLabel,
     infoLabelTooltip = formField && formField.infoLabelTooltip,
