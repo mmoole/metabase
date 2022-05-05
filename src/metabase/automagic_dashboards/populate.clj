@@ -7,6 +7,7 @@
             [metabase.automagic-dashboards.filters :as filters]
             [metabase.models.card :as card]
             [metabase.models.collection :as collection]
+            [metabase.public-settings :as public-settings]
             [metabase.query-processor.util :as qp.util]
             [metabase.util.i18n :refer [trs]]
             [toucan.db :as db]))
@@ -43,9 +44,23 @@
         :location "/")
       (create-collection! "Automatically Generated Dashboards" "#509EE3" nil nil)))
 
-(def colors
+(defn- whitelabeled-colors
+  "Get color from application-colors or default color."
+  [default-colors-map]
+  (vec (for [[whitelabeled-color-name default-color] default-colors-map]
+         (get (public-settings/application-colors) whitelabeled-color-name default-color))))
+
+(defn colors
   "Colors used for coloring charts and collections."
-  ["#509EE3" "#9CC177" "#A989C5" "#EF8C8C" "#f9d45c" "#F1B556" "#A6E7F3" "#7172AD"])
+  []
+  (whitelabeled-colors {:brand "#509EE3"
+                        :accent1 "#88BF4D"
+                        :accent2 "#A989C5"
+                        :accent3 "#EF8C8C"
+                        :accent4 "#F9D45C"
+                        :accent5 "#F2A86F"
+                        :accent6 "#98D9D9"
+                        :accent7 "#7172AD"}))
 
 (defn- ensure-distinct-colors
   [candidates]
@@ -55,14 +70,14 @@
         (fn [acc color count]
           (if (= count 1)
             (conj acc color)
-            (concat acc [color (first (drop-while (conj (set acc) color) colors))])))
+            (concat acc [color (first (drop-while (conj (set acc) color) (colors)))])))
         [])))
 
 (defn map-to-colors
   "Map given objects to distinct colors."
   [objs]
   (->> objs
-       (map (comp colors #(mod % (count colors)) hash))
+       (map (comp (colors) #(mod % (count (colors))) hash))
        ensure-distinct-colors))
 
 (defn- colorize
