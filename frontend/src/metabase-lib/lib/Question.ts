@@ -323,6 +323,10 @@ export default class Question {
     return this.setCard(assoc(this.card(), "display", display));
   }
 
+  /**
+   * returns whether this question is a model
+   * @returns boolean
+   */
   isDataset() {
     return this._card && this._card.dataset;
   }
